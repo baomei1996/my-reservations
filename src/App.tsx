@@ -1,7 +1,12 @@
 import "./App.css";
+import Router from "./Router";
 
 function App() {
-    return <div>Initialize project</div>;
+    return (
+        <>
+            <Router />
+        </>
+    );
 }
 
 export default App;
