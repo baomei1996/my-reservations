@@ -5,11 +5,16 @@ import SelectDate from "@components/SelectDate";
 import Counter from "@components/Counter";
 import Textarea from "@components/Textarea";
 import PencilIconSrc from "@icons/edit.svg";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useContext } from "react";
 import { SELECT_TABLE_OPTIONS } from "@/static/constants";
 import { MultiSelect } from "primereact/multiselect";
+import { ReservationContext } from "@contexts/ReservationContext";
+import { ReservationItemType } from "@/types";
+import { useNavigate } from "react-router-dom";
 
 export default function ReservationForm() {
+    const navigate = useNavigate();
+    const { addReservation } = useContext(ReservationContext);
     const [name, setName] = useState<string>("");
     const [phone, setPhone] = useState<string>("");
     const [guestCount, setGuestCount] = useState<number>(1);
@@ -25,6 +30,20 @@ export default function ReservationForm() {
 
     const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
+
+        const newReservation: ReservationItemType = {
+            id: Date.now().toString(),
+            name,
+            phone,
+            guestCount,
+            reservedTable: reservedTables,
+            reservationDate: reservationDate.toISOString(),
+            note,
+            isSeated: false,
+        };
+
+        addReservation(newReservation);
+        navigate("/");
     };
 
     return (
@@ -44,7 +63,6 @@ export default function ReservationForm() {
                     <PhoneInput
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
-                        type="number"
                         label={
                             <LabelText>
                                 Phone<Required>*</Required>
