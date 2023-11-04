@@ -47,7 +47,7 @@ function ReservationProvider({ children }: { children: React.ReactNode }) {
         setReservations(
             reservations.map((reservation: ReservationItemType) =>
                 reservation.id === id
-                    ? { ...reservation, seated: true }
+                    ? { ...reservation, isSeated: true }
                     : reservation
             )
         );
