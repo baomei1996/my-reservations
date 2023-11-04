@@ -6,7 +6,11 @@ interface IButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export default function Button({ children, ...props }: IButtonProps) {
-    return <Container {...props}>{children}</Container>;
+    return (
+        <Container type="button" {...props}>
+            {children}
+        </Container>
+    );
 }
 
 const Container = styled.button`
