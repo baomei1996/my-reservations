@@ -8,6 +8,7 @@ interface IReservationContext {
     removeReservation: (id: string) => void;
     updateReservation: (updatedReservation: ReservationItemType) => void;
     seatedReservation: (id: string) => void;
+    getReservation: (id: string) => ReservationItemType | undefined;
 }
 
 const ReservationContext = createContext<IReservationContext>({
@@ -16,6 +17,7 @@ const ReservationContext = createContext<IReservationContext>({
     removeReservation: () => {},
     updateReservation: () => {},
     seatedReservation: () => {},
+    getReservation: () => undefined,
 });
 
 function ReservationProvider({ children }: { children: React.ReactNode }) {
@@ -53,6 +55,12 @@ function ReservationProvider({ children }: { children: React.ReactNode }) {
         );
     };
 
+    const getReservation = (id: string) => {
+        return reservations.find(
+            (reservation: ReservationItemType) => reservation.id === id
+        );
+    };
+
     return (
         <ReservationContext.Provider
             value={{
@@ -61,6 +69,7 @@ function ReservationProvider({ children }: { children: React.ReactNode }) {
                 removeReservation,
                 updateReservation,
                 seatedReservation,
+                getReservation,
             }}
         >
             {children}
