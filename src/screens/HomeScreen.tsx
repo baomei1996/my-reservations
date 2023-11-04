@@ -11,12 +11,15 @@ export default function HomeScreen() {
         <>
             <HomeHeader />
             <ContentsContainer>
-                {reservations.map((reservation) => (
-                    <ReservationCard
-                        key={reservation.id}
-                        reservation={reservation}
-                    />
-                ))}
+                {reservations.map(
+                    (reservation) =>
+                        !reservation.isSeated && (
+                            <ReservationCard
+                                key={reservation.id}
+                                reservation={reservation}
+                            />
+                        )
+                )}
             </ContentsContainer>
         </>
     );
