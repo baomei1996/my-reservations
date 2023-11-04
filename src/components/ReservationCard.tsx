@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { ReservationItemType } from "@/types";
 import styled from "styled-components";
 import { Card } from "primereact/card";
@@ -9,6 +9,7 @@ import PeopleIconSrc from "@icons/group.svg";
 import CalendarIconSrc from "@icons/event_available.svg";
 import { getFormattedDate } from "@/utils/dateHelper";
 import { useNavigate } from "react-router-dom";
+import { ReservationContext } from "@contexts/ReservationContext";
 
 interface IReservationCardProps {
     reservation: ReservationItemType;
@@ -18,6 +19,8 @@ export default function ReservationCard({
     reservation,
 }: IReservationCardProps) {
     const navigate = useNavigate();
+    const { removeReservation, seatedReservation } =
+        useContext(ReservationContext);
     const { name, phone, reservationDate, guestCount, reservedTable, note } =
         reservation;
 
@@ -27,10 +30,18 @@ export default function ReservationCard({
 
     const onClickDeleteButton = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
+
+        if (window.confirm("해당 예약을 삭제하시겠습니까?")) {
+            removeReservation(reservation.id);
+        }
     };
 
     const onClickSeatedButton = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.stopPropagation();
+
+        if (window.confirm("해당 예약을 입장 처리하시겠습니까?")) {
+            seatedReservation(reservation.id);
+        }
     };
 
     return (
