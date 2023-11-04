@@ -7,6 +7,7 @@ import DateIconSrc from "@icons/today.svg";
 import DeleteIconSrc from "@icons/trash.svg";
 import { Dialog } from "primereact/dialog";
 import { Calendar } from "primereact/calendar";
+import { getFormattedDate } from "@/utils/dateHelper";
 
 interface ISelectDateProps {
     date: Date;
@@ -39,6 +40,12 @@ export default function SelectDate({
         onHide();
     };
 
+    // Dialog가 보여질 때마다 date를 초기화 힌다.
+    const onShow = (): void => {
+        setOnlyDate(date);
+        setOnlyTime(date);
+    };
+
     return (
         <>
             <SelectDateButton
@@ -46,9 +53,11 @@ export default function SelectDate({
                 onClick={() => setVisible((prev) => !prev)}
             >
                 <IconImg src={CalendarIconSrc} />
-                <ButtonText>Select Date</ButtonText>
+                <ButtonText>
+                    {date ? getFormattedDate(date) : "Select Date"}
+                </ButtonText>
             </SelectDateButton>
-            <DateDialog visible={visible} onHide={onHide}>
+            <DateDialog visible={visible} onHide={onHide} onShow={onShow}>
                 <PickerContainer>
                     <IconImg src={TimeIconSrc} />
                     <TimePicker
@@ -90,8 +99,8 @@ const SelectDateButton = styled(Button)`
 const IconImg = styled.img``;
 
 const ButtonText = styled.div`
-    font-size: 20px;
-    line-height: 32px;
+    font-size: 18px;
+    line-height: 28px;
     color: rgb(70, 65, 61);
 `;
 
