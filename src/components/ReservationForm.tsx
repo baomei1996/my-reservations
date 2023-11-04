@@ -127,6 +127,7 @@ export default function ReservationForm({
                 </InputCenter>
                 <InputBottom>
                     <Textarea
+                        defaultValue={note}
                         value={note}
                         onChange={(e) => setNote(e.target.value)}
                         label={
