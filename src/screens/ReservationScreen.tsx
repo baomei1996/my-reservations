@@ -1,11 +1,12 @@
-import React from "react";
 import styled from "styled-components";
 import ReservationHeader from "@components/ReservationHeader";
+import ReservationForm from "@components/ReservationForm";
 
 export default function ReservationScreen() {
     return (
         <Container>
             <ReservationHeader />
+            <ReservationForm />
         </Container>
     );
 }
