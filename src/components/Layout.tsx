@@ -12,6 +12,7 @@ export default function Layout({ children }: ILayoutProps) {
 const Container = styled.div`
     width: 100%;
     max-width: 1024px;
+    min-width: 900px;
     margin: auto;
     height: 90vh;
     margin-top: calc(10vh / 2);
