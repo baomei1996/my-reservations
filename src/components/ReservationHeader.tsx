@@ -4,7 +4,13 @@ import GoBackIconSrc from "@icons/keyboard_backspace.svg";
 import CloseIconSrc from "@icons/close.svg";
 import { useNavigate } from "react-router-dom";
 
-export default function ReservationHeader() {
+interface IReservationHeaderProps {
+    isEditMode?: boolean;
+}
+
+export default function ReservationHeader({
+    isEditMode = false,
+}: IReservationHeaderProps) {
     const navigate = useNavigate();
     const onClickGoBack = (): void => {
         navigate(-1);
@@ -18,7 +24,9 @@ export default function ReservationHeader() {
                 </GoBackButton>
             </LeftContainer>
             <CenterContainer>
-                <TitleText>New Reservation</TitleText>
+                <TitleText>
+                    {isEditMode ? "Edit Reservation" : "New Reservation"}
+                </TitleText>
             </CenterContainer>
             <RightContainer>
                 <CloseIcon>

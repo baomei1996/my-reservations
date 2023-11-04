@@ -11,18 +11,36 @@ import { MultiSelect } from "primereact/multiselect";
 import { ReservationContext } from "@contexts/ReservationContext";
 import { ReservationItemType } from "@/types";
 import { useNavigate } from "react-router-dom";
+import useInitializeReservation from "@/hooks/useInitializeReservation";
 
-export default function ReservationForm() {
+interface IReservationFormProps {
+    isEditMode?: boolean;
+    reservation?: ReservationItemType;
+}
+
+export default function ReservationForm({
+    isEditMode = false,
+    reservation = undefined,
+}: IReservationFormProps) {
+    const initReservation = useInitializeReservation({
+        isEditMode,
+        reservation,
+    });
     const navigate = useNavigate();
-    const { addReservation } = useContext(ReservationContext);
-    const [name, setName] = useState<string>("");
-    const [phone, setPhone] = useState<string>("");
-    const [guestCount, setGuestCount] = useState<number>(1);
-    const [reservedTables, setReservedTables] = useState<number[]>([
-        SELECT_TABLE_OPTIONS[0].value as number,
-    ]);
-    const [reservationDate, setReservationDate] = useState<Date>(new Date());
-    const [note, setNote] = useState<string>("");
+    const { addReservation, updateReservation } =
+        useContext(ReservationContext);
+    const [name, setName] = useState<string>(reservation?.name ?? "");
+    const [phone, setPhone] = useState<string>(initReservation.phone);
+    const [guestCount, setGuestCount] = useState<number>(
+        initReservation.guestCount
+    );
+    const [reservedTable, setReservedTable] = useState<number[]>(
+        initReservation.reservedTable
+    );
+    const [reservationDate, setReservationDate] = useState<Date>(
+        initReservation.reservationDate
+    );
+    const [note, setNote] = useState<string>(initReservation.note);
 
     const canSave = useMemo(() => {
         return name && phone;
@@ -31,18 +49,31 @@ export default function ReservationForm() {
     const onSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
 
-        const newReservation: ReservationItemType = {
-            id: Date.now().toString(),
+        const changedReservation = {
             name,
             phone,
             guestCount,
-            reservedTable: reservedTables,
+            reservedTable,
             reservationDate: reservationDate.toISOString(),
             note,
-            isSeated: false,
         };
 
-        addReservation(newReservation);
+        // 수정할 예약일 경우 정보를 업데이트하고, 아닐 경우 새로운 예약을 추가한다.
+        if (isEditMode && reservation) {
+            const updatedReservation = {
+                ...changedReservation,
+                id: reservation.id,
+                isSeated: reservation.isSeated,
+            };
+            updateReservation(updatedReservation);
+        } else {
+            const newReservation = {
+                ...changedReservation,
+                id: Date.now().toString(),
+                isSeated: false,
+            };
+            addReservation(newReservation);
+        }
         navigate("/");
     };
 
@@ -51,6 +82,7 @@ export default function ReservationForm() {
             <InputContainer>
                 <InputTop>
                     <NameInput
+                        defaultValue={name}
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         label={
@@ -61,6 +93,7 @@ export default function ReservationForm() {
                         required
                     />
                     <PhoneInput
+                        defaultValue={phone}
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         label={
@@ -84,8 +117,8 @@ export default function ReservationForm() {
                         />
                     </GuestCounterContainer>
                     <TableSelect
-                        value={reservedTables}
-                        onChange={(e) => setReservedTables(e.value)}
+                        value={reservedTable}
+                        onChange={(e) => setReservedTable(e.value)}
                         options={SELECT_TABLE_OPTIONS}
                         placeholder="Select Tables"
                         maxSelectedLabels={3}
