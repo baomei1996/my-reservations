@@ -8,3 +8,8 @@ export type ReservationItemType = {
     note?: string;
     isSeated: boolean;
 };
+
+export type Option = {
+    label: string;
+    value: string | number;
+};
