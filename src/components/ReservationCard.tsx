@@ -8,6 +8,7 @@ import PhoneIconSrc from "@icons/phone.svg";
 import PeopleIconSrc from "@icons/group.svg";
 import CalendarIconSrc from "@icons/event_available.svg";
 import { getFormattedDate } from "@/utils/dateHelper";
+import { useNavigate } from "react-router-dom";
 
 interface IReservationCardProps {
     reservation: ReservationItemType;
@@ -16,10 +17,24 @@ interface IReservationCardProps {
 export default function ReservationCard({
     reservation,
 }: IReservationCardProps) {
+    const navigate = useNavigate();
     const { name, phone, reservationDate, guestCount, reservedTable, note } =
         reservation;
+
+    const onClickReservationCard = () => {
+        navigate(`/edit/${reservation.id}`);
+    };
+
+    const onClickDeleteButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+    };
+
+    const onClickSeatedButton = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.stopPropagation();
+    };
+
     return (
-        <Container>
+        <Container onClick={onClickReservationCard}>
             <TopInfoContainer>
                 <StrongText>{name}</StrongText>
                 <PhonButton>
@@ -46,10 +61,10 @@ export default function ReservationCard({
                 {reservation.note && <Note>{note}</Note>}
             </NoteContainer>
             <Footer>
-                <DeleteButton>
+                <DeleteButton onClick={onClickDeleteButton}>
                     <IconImg src={DeleteIconSrc} />
                 </DeleteButton>
-                <SeatedButton>
+                <SeatedButton onClick={onClickSeatedButton}>
                     <SeatedButtonText>Seated</SeatedButtonText>
                 </SeatedButton>
             </Footer>
@@ -61,6 +76,7 @@ const Container = styled(Card)`
     & .p-card-body {
         padding: 20px;
         height: 100%;
+        cursor: pointer;
     }
 
     & .p-card-content {
